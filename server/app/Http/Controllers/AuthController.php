@@ -95,6 +95,20 @@ class AuthController extends Controller
                     ], 500);
                 }
             }
+
+            public function profile()
+            {
+                try{
+                return response()->json([
+                'user' => Auth::user(),
+                'message' => 'Successfully retrieved profile',]);
+                }catch(\Exception $e){
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Retrieving profile failed, try again later',
+                    ], 500);
+                }
+            }
             
             public function refresh()
             {

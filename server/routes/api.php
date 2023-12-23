@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::group(["middleware" => "auth:api", "prefix" => "user"], function () {
     Route::post("logout", [AuthController::class, "logout"]);
     Route::post("refresh", [AuthController::class, "refresh"]);
+    Route::get("profile", [AuthController::class, "profile"]);
 
+    Route::group(["prefix" => "admin", "middleware" => "admin.valid"], function () {
+
+    });
 });
 
 Route::post("login", [AuthController::class, "login"]);
