@@ -20,12 +20,12 @@ Route::group(["middleware" => "auth:api", "prefix" => "user"], function () {
     Route::post("refresh", [AuthController::class, "refresh"]);
     Route::get("profile", [AuthController::class, "profile"]);
     Route::get("tasks", [TaskContoller::class, "tasks"]);
-    Route::get("markAsDone/{task_id}", [TaskContoller::class, "markAsDone"]);
+    Route::post("markAsDone/{task_id}", [TaskContoller::class, "markAsDone"]);
 
     Route::group(["prefix" => "employer", "middleware" => "employer.valid"], function () {
-        Route::get("create", [TaskContoller::class, "create"]);
-        Route::get("edit/{task_id}", [TaskContoller::class, "edit"]);
-        Route::get("delete/{task_id}", [TaskContoller::class, "delete"]);
+        Route::post("create", [TaskContoller::class, "create"]);
+        Route::post("edit/{task_id}", [TaskContoller::class, "edit"]);
+        Route::post("delete/{task_id}", [TaskContoller::class, "delete"]);
     });
 });
 
