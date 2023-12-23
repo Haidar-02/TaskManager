@@ -127,7 +127,7 @@ class TaskContoller extends Controller
                 ]);
             }
 
-            if (Auth::user()->role_id != 1 || Auth::user()->id !== $task->employer_id) {
+            if (Auth::user()->role_id != 1) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized',
@@ -144,6 +144,44 @@ class TaskContoller extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Could not delete task, try again later.',
+            ], 500);
+        }
+    }
+
+    public function markAsDone(Request $request, $taskId)
+    {
+        try {
+            $task = Task::find($taskId);
+        
+            if (!$task) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Task not found',
+                ]);
+            }
+        
+            if (Auth::user()->role_id != 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Unauthorized',
+                ]);
+            }
+        
+            $task->update([
+                'is_done' => !$task->is_done,
+            ]);
+        
+            $statusMessage = $task->is_done ? 'Task marked as done' : 'Task marked as undone';
+        
+            return response()->json([
+                'status' => 'success',
+                'message' => $statusMessage,
+                'task' => $task,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Could not update task status, try again later.',
             ], 500);
         }
     }
