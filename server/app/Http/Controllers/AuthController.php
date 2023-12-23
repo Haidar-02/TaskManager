@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,9 +99,12 @@ class AuthController extends Controller
 
             public function profile()
             {
+                $user = User::where('id', Auth::id())->first();
+                $role = Role::where('id', $user->role_id)->first();
                 try{
                 return response()->json([
                 'user' => Auth::user(),
+                'role' => $role,
                 'message' => 'Successfully retrieved profile',]);
                 }catch(\Exception $e){
                     return response()->json([
