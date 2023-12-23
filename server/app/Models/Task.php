@@ -17,4 +17,15 @@ class Task extends Model
     {
         return $this->belongsTo(User::class, 'employer_id');
     }
+
+    public function getStateAttribute()
+    {
+        if ($this->is_done) {
+            return 'Done';
+        } elseif ($this->due_date >= now()->toDateString()) {
+            return 'In Progress';
+        } else {
+            return 'Late';
+        }
+    }
 }
