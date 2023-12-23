@@ -152,27 +152,20 @@ class TaskContoller extends Controller
     {
         try {
             $task = Task::find($taskId);
-        
+
             if (!$task) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Task not found',
                 ]);
             }
-        
-            if (Auth::user()->role_id != 1) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Unauthorized',
-                ]);
-            }
-        
+
             $task->update([
                 'is_done' => !$task->is_done,
             ]);
-        
+
             $statusMessage = $task->is_done ? 'Task marked as done' : 'Task marked as undone';
-        
+
             return response()->json([
                 'status' => 'success',
                 'message' => $statusMessage,
