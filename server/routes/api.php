@@ -19,8 +19,8 @@ Route::group(["middleware" => "auth:api", "prefix" => "user"], function () {
     Route::post("refresh", [AuthController::class, "refresh"]);
     Route::get("profile", [AuthController::class, "profile"]);
 
-    Route::group(["prefix" => "admin", "middleware" => "admin.valid"], function () {
-
+    Route::group(["prefix" => "employer", "middleware" => "employer.valid"], function () {
+        
     });
 });
 
