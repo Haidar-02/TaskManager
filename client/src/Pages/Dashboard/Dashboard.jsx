@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { logout, profile } from "../../Helpers/auth.helper";
 import { allTasks } from "../../Helpers/tasks.helper";
 import { useNavigate } from "react-router-dom";
+import TaskView from "../../Components/TaskView/TaskView";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const Dashboard = () => {
       if (response.data.status === "success") {
         setUser(response.data.user);
         setRole(response.data.role.role_name);
+        localStorage.setItem("role_id", response.data.role.id);
       }
     } catch (error) {
       console.log(error);
@@ -85,6 +87,31 @@ const Dashboard = () => {
           </button>
         </div>
       </header>
+      <div className="p-10 w-full flex items-center justify-between">
+        <div>
+          <p className="mb-5">Tasks List</p>
+          <span className="text-sm hover:bg-gray-800 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+            All Tasks
+          </span>
+          <span className="text-sm hover:bg-yellow-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+            Pending
+          </span>
+          <span className="text-sm hover:bg-green-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+            Done
+          </span>
+          <span className="text-sm hover:bg-red-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+            Late
+          </span>
+        </div>
+        <button className=" p-2 bg-gray-800 text-white hover:bg-opacity-70 transition-all text-sm rounded-md">
+          Add New Task
+        </button>
+      </div>
+      <div className="p-10 flex flex-wrap items-center justify-start">
+        {tasks?.map((task) => (
+          <TaskView key={task.id} task={task} />
+        ))}
+      </div>
     </div>
   );
 };
