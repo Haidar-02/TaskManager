@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { formatDateToView, getStatusColor } from "../../Helpers/helpers";
 import EditTask from "../Modals/EditTask";
-import { deleteTask } from "../../Helpers/tasks.helper";
+import { deleteTask, martTaskDone } from "../../Helpers/tasks.helper";
 import ErrorMessageComponent from "../EventComponents/ErrorMessageComponent";
 import SuccessMessageComponent from "../EventComponents/SuccessMessageComponent";
 
@@ -20,6 +20,20 @@ const TaskView = ({ task, getTasks }) => {
   const handleDeleteTask = async () => {
     try {
       const response = await deleteTask(task.id);
+      if (response.data.status === "error") {
+        setErrorMessage(response.data.message);
+      } else {
+        setSuccessMessage(response.data.message);
+        getTasks();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleTaskDone = async () => {
+    try {
+      const response = await martTaskDone(task.id);
       console.log(response);
       if (response.data.status === "error") {
         setErrorMessage(response.data.message);
@@ -66,8 +80,13 @@ const TaskView = ({ task, getTasks }) => {
           </button>
         </div>
 
-        <button className=" self-center mt-2 px-2 py-1 bg-green-800 w-full text-white hover:opacity-80 text-sm rounded-sm transition-all">
-          Mark as Done
+        <button
+          onClick={handleTaskDone}
+          className={`self-center mt-2 px-2 py-1 w-full text-white text-sm rounded-sm hover:opacity-80 transition-all ${
+            task.is_done ? "bg-gray-600" : "bg-green-800 "
+          }`}
+        >
+          {task.is_done ? "Undo" : "Mark as Done"}
         </button>
         {task && (
           <EditTask
