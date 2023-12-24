@@ -5,7 +5,7 @@ import { deleteTask, martTaskDone } from "../../Helpers/tasks.helper";
 import ErrorMessageComponent from "../EventComponents/ErrorMessageComponent";
 import SuccessMessageComponent from "../EventComponents/SuccessMessageComponent";
 
-const TaskView = ({ task, getTasks }) => {
+const TaskView = ({ task, getTasks, isUserAdmin }) => {
   const [editIsOpen, setEditIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [succesMessage, setSuccessMessage] = useState("");
@@ -65,20 +65,22 @@ const TaskView = ({ task, getTasks }) => {
             {formatDateToView(task.due_date)}
           </span>
         </p>
-        <div className="w-full flex justify-between items-center mt-2 gap-3">
-          <button
-            onClick={() => openEditModal()}
-            className=" px-2 py-1 bg-gray-800 text-white hover:opacity-80 flex-1 text-sm rounded-sm transition-all"
-          >
-            edit
-          </button>
-          <button
-            onClick={handleDeleteTask}
-            className=" px-2 py-1 bg-red-600 text-white hover:opacity-80 flex-1 text-sm rounded-sm transition-all"
-          >
-            delete
-          </button>
-        </div>
+        {isUserAdmin && (
+          <div className="w-full flex justify-between items-center mt-2 gap-3">
+            <button
+              onClick={() => openEditModal()}
+              className=" px-2 py-1 bg-gray-800 text-white hover:opacity-80 flex-1 text-sm rounded-sm transition-all"
+            >
+              edit
+            </button>
+            <button
+              onClick={handleDeleteTask}
+              className=" px-2 py-1 bg-red-600 text-white hover:opacity-80 flex-1 text-sm rounded-sm transition-all"
+            >
+              delete
+            </button>
+          </div>
+        )}
 
         <button
           onClick={handleTaskDone}

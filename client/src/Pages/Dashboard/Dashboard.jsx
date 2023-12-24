@@ -44,6 +44,8 @@ const Dashboard = () => {
     }
   };
 
+  const isUserAdmin = localStorage.getItem("role_id") === "1";
+
   const handleLogout = async () => {
     try {
       const response = await logout();
@@ -161,14 +163,16 @@ const Dashboard = () => {
             Late
           </span>
         </div>
-        <button
-          onClick={() => {
-            openCreateModal();
-          }}
-          className=" p-2 bg-gray-800 text-white hover:bg-opacity-70 transition-all text-sm rounded-md"
-        >
-          Add New Task
-        </button>
+        {isUserAdmin && (
+          <button
+            onClick={() => {
+              openCreateModal();
+            }}
+            className="p-2 bg-gray-800 text-white hover:bg-opacity-70 transition-all text-sm rounded-md"
+          >
+            Add New Task
+          </button>
+        )}
       </div>
 
       <div className="p-10 flex flex-wrap items-center justify-start">
@@ -178,7 +182,12 @@ const Dashboard = () => {
           </div>
         ) : (
           filteredTasks.map((task) => (
-            <TaskView key={task.id} task={task} getTasks={getTasks} />
+            <TaskView
+              key={task.id}
+              task={task}
+              getTasks={getTasks}
+              isUserAdmin={isUserAdmin}
+            />
           ))
         )}
       </div>
