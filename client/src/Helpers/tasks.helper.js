@@ -26,7 +26,11 @@ async function martTaskDone(task_id) {
 
 async function deleteTask(task_id) {
   try {
-    const res = await axios.post(`${baseUrl}user/delete/${task_id}`, auth());
+    const res = await axios.post(
+      `${baseUrl}user/employer/delete/${task_id}`,
+      undefined,
+      auth()
+    );
     return res;
   } catch (error) {
     throw error;
