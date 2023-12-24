@@ -4,6 +4,7 @@ import { allTasks } from "../../Helpers/tasks.helper";
 import { useNavigate } from "react-router-dom";
 import TaskView from "../../Components/TaskView/TaskView";
 import CreateTask from "../../Components/Modals/CreateTask";
+import EmptyPic from "../../Assets/Dashboard/Empty.svg";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Dashboard = () => {
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [createIsOpen, setCreateIsOpen] = useState(false);
+  const [filter, setFilter] = useState("all");
 
   const onRequestClose = () => {
     setCreateIsOpen(false);
@@ -22,6 +24,7 @@ const Dashboard = () => {
   };
 
   const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
 
   const getPofile = async () => {
     try {
@@ -62,6 +65,7 @@ const Dashboard = () => {
       }
       if (response.data.status === "success") {
         setTasks(response.data.tasks);
+        applyFilter(response.data.tasks);
       }
     } catch (error) {
       console.log(error);
@@ -72,6 +76,31 @@ const Dashboard = () => {
     getPofile();
     getTasks();
   }, []);
+  useEffect(() => {
+    applyFilter(tasks);
+  }, [filter, tasks]);
+
+  const applyFilter = (tasksToFilter) => {
+    switch (filter) {
+      case "all":
+        setFilteredTasks(tasksToFilter);
+        break;
+      case "pending":
+        setFilteredTasks(
+          tasksToFilter.filter((task) => task.state === "In Progress")
+        );
+        break;
+      case "done":
+        setFilteredTasks(tasksToFilter.filter((task) => task.state === "Done"));
+        break;
+      case "late":
+        setFilteredTasks(tasksToFilter.filter((task) => task.state === "Late"));
+        break;
+      default:
+        setFilteredTasks(tasksToFilter);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-start bg-gray-200 w-full min-h-screen h-full">
       {isLoading && (
@@ -99,16 +128,36 @@ const Dashboard = () => {
       <div className="p-10 w-full flex items-center justify-between">
         <div>
           <p className="mb-5">Tasks List</p>
-          <span className="text-sm hover:bg-gray-800 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+          <span
+            onClick={() => setFilter("all")}
+            className={`text-sm ${
+              filter === "all" && " bg-gray-800 text-white"
+            } hover:bg-gray-800 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md`}
+          >
             All Tasks
           </span>
-          <span className="text-sm hover:bg-yellow-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+          <span
+            onClick={() => setFilter("pending")}
+            className={`text-sm ${
+              filter === "pending" && " bg-yellow-500 text-white"
+            } hover:bg-yellow-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md`}
+          >
             Pending
           </span>
-          <span className="text-sm hover:bg-green-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+          <span
+            onClick={() => setFilter("done")}
+            className={`text-sm ${
+              filter === "done" && " bg-green-500 text-white"
+            } hover:bg-green-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md`}
+          >
             Done
           </span>
-          <span className="text-sm hover:bg-red-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md">
+          <span
+            onClick={() => setFilter("late")}
+            className={`text-sm ${
+              filter === "late" && " bg-red-500 text-white"
+            } hover:bg-red-600 hover:text-white transition-all m-2 p-2 cursor-pointer rounded-md`}
+          >
             Late
           </span>
         </div>
@@ -121,10 +170,17 @@ const Dashboard = () => {
           Add New Task
         </button>
       </div>
+
       <div className="p-10 flex flex-wrap items-center justify-start">
-        {tasks?.map((task) => (
-          <TaskView key={task.id} task={task} getTasks={getTasks} />
-        ))}
+        {filteredTasks.length === 0 ? (
+          <div className="flex gap-10 items-center justify-center">
+            <img src={EmptyPic} alt="No tasks" className="w-1/3" />
+          </div>
+        ) : (
+          filteredTasks.map((task) => (
+            <TaskView key={task.id} task={task} getTasks={getTasks} />
+          ))
+        )}
       </div>
       <CreateTask
         fetchTasks={getTasks}

@@ -58,7 +58,7 @@ const TaskView = ({ task, getTasks }) => {
           )} top-0 left-0 right-0`}
         ></div>
         <h3 className="text-lg font-semibold">{task.title}</h3>
-        <p className="text-sm">{task.description}</p>
+        <p className="text-xs">{task.description}</p>
         <p className="text-sm">
           Due{" "}
           <span className=" font-semibold">
