@@ -33,7 +33,7 @@ async function deleteTask(task_id) {
   }
 }
 
-async function createTask({ title, description, due_date }) {
+async function createTask(title, description, due_date) {
   try {
     const res = await axios.post(
       `${baseUrl}user/employer/create`,
@@ -50,7 +50,7 @@ async function createTask({ title, description, due_date }) {
   }
 }
 
-async function editTask({ title, description, due_date, task_id }) {
+async function editTask(title, description, due_date, task_id) {
   try {
     const res = await axios.post(
       `${baseUrl}user/employer/edit/${task_id}`,

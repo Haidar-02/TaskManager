@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { formatDateToView, getStatusColor } from "../../Helpers/helpers";
+import EditTask from "../Modals/EditTask";
 
-const TaskView = ({ task }) => {
-  console.log(task);
+const TaskView = ({ task, getTasks }) => {
+  const [editIsOpen, setEditIsOpen] = useState(false);
+  const onRequestCloseEdit = () => {
+    setEditIsOpen(false);
+  };
+
+  const openEditModal = () => {
+    setEditIsOpen(true);
+  };
   return (
     <div className=" flex flex-col items-start justify-between border p-4 m-2 rounded-md bg-white shadow-md max-w-96 w-96 hover:scale-95 transition-all relative">
       <div
@@ -19,7 +27,10 @@ const TaskView = ({ task }) => {
         </span>
       </p>
       <div className="w-full flex justify-between items-center mt-2 gap-3">
-        <button className=" px-2 py-1 bg-gray-800 text-white hover:opacity-80 flex-1 text-sm rounded-sm transition-all">
+        <button
+          onClick={() => openEditModal()}
+          className=" px-2 py-1 bg-gray-800 text-white hover:opacity-80 flex-1 text-sm rounded-sm transition-all"
+        >
           edit
         </button>
         <button className=" px-2 py-1 bg-red-600 text-white hover:opacity-80 flex-1 text-sm rounded-sm transition-all">
@@ -30,6 +41,14 @@ const TaskView = ({ task }) => {
       <button className=" self-center mt-2 px-2 py-1 bg-green-800 w-full text-white hover:opacity-80 text-sm rounded-sm transition-all">
         Mark as Done
       </button>
+      {task && (
+        <EditTask
+          fetchTasks={getTasks}
+          isOpen={editIsOpen}
+          onRequestClose={onRequestCloseEdit}
+          task={task}
+        />
+      )}
     </div>
   );
 };

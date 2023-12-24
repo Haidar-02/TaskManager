@@ -3,6 +3,7 @@ import { logout, profile } from "../../Helpers/auth.helper";
 import { allTasks } from "../../Helpers/tasks.helper";
 import { useNavigate } from "react-router-dom";
 import TaskView from "../../Components/TaskView/TaskView";
+import CreateTask from "../../Components/Modals/CreateTask";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -10,6 +11,15 @@ const Dashboard = () => {
   const [user, setUser] = useState();
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [createIsOpen, setCreateIsOpen] = useState(false);
+
+  const onRequestClose = () => {
+    setCreateIsOpen(false);
+  };
+
+  const openCreateModal = () => {
+    setCreateIsOpen(true);
+  };
 
   const [tasks, setTasks] = useState([]);
 
@@ -52,7 +62,6 @@ const Dashboard = () => {
       }
       if (response.data.status === "success") {
         setTasks(response.data.tasks);
-        console.log(response);
       }
     } catch (error) {
       console.log(error);
@@ -103,15 +112,25 @@ const Dashboard = () => {
             Late
           </span>
         </div>
-        <button className=" p-2 bg-gray-800 text-white hover:bg-opacity-70 transition-all text-sm rounded-md">
+        <button
+          onClick={() => {
+            openCreateModal();
+          }}
+          className=" p-2 bg-gray-800 text-white hover:bg-opacity-70 transition-all text-sm rounded-md"
+        >
           Add New Task
         </button>
       </div>
       <div className="p-10 flex flex-wrap items-center justify-start">
         {tasks?.map((task) => (
-          <TaskView key={task.id} task={task} />
+          <TaskView key={task.id} task={task} getTasks={getTasks} />
         ))}
       </div>
+      <CreateTask
+        fetchTasks={getTasks}
+        isOpen={createIsOpen}
+        onRequestClose={onRequestClose}
+      />
     </div>
   );
 };
