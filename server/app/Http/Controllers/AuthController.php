@@ -54,6 +54,13 @@ class AuthController extends Controller
                             'message' => 'Please fill in all fields',
                         ]);
                     }
+                    $existingUser = User::where('email', $request->email)->first();
+                    if ($existingUser) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Email already in use',
+                        ], 422);
+                    }
                     $user = User::create([
                         'name' => $request->name,
                         'email' => $request->email,
@@ -67,13 +74,7 @@ class AuthController extends Controller
                         'user' => $user,
                     ]);
                 } catch (\Exception $e) {
-                    $existingUser = User::where('email', $request->email)->first();
-                    if ($existingUser) {
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'Email already in use',
-                        ], 422);
-                    }
+                    
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Registration failed, try again later',
