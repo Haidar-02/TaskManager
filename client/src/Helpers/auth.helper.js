@@ -48,7 +48,7 @@ async function register({ name, email, password }) {
 
 async function profile() {
   try {
-    const res = await axios.get(`${baseUrl}user/profile`);
+    const res = await axios.get(`${baseUrl}user/profile`, auth());
     return res;
   } catch (error) {
     throw error;

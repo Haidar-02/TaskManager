@@ -104,6 +104,7 @@ class AuthController extends Controller
                 $role = Role::where('id', $user->role_id)->first();
                 try{
                 return response()->json([
+                'status' => 'success',
                 'user' => Auth::user(),
                 'role' => $role,
                 'message' => 'Successfully retrieved profile',]);
